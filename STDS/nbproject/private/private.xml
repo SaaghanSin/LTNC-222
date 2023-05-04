@@ -3,11 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/User/Documents/NetBeansProjects/STDS/src/service/studentServiceImp.java</file>
-            <file>file:/C:/Users/User/Documents/NetBeansProjects/STDS/src/view/Students.java</file>
-            <file>file:/C:/Users/User/Documents/NetBeansProjects/STDS/src/controller/studentManage.java</file>
-            <file>file:/C:/Users/User/Documents/NetBeansProjects/STDS/src/ubility/tableModel.java</file>
-            <file>file:/C:/Users/User/Documents/NetBeansProjects/STDS/src/model/Students.java</file>
+            <file>file:/C:/Users/User/Documents/NetBeansProjects/STDS/src/view/StudentsView.java</file>
+            <file>file:/C:/Users/User/Documents/NetBeansProjects/STDS/src/dao/studentDaoImp.java</file>
+            <file>file:/C:/Users/User/Documents/NetBeansProjects/STDS/src/dao/DBConnect.java</file>
         </group>
     </open-files>
 </project-private>

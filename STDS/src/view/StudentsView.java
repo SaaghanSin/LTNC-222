@@ -13,21 +13,50 @@ import java.sql.ResultSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import model.Students;
 /**
  *
  * @author User
  */
-public class Students extends javax.swing.JFrame {
+public class StudentsView extends javax.swing.JFrame {
 
     /**
      * Creates new form Students
      */
-    public Students() {
+    public StudentsView() {
         initComponents();
         studentManage controller = new studentManage(jpnView,btnAdd, jtfSearch);
        controller.setDataToModel();
     }
-   
+   void insert(model.Students s){
+       try{
+    Connection cons = DBConnect.getConnection();
+    String sql = "Insert into Students(Student ID, Name, Gender, Brithday, Phone, Room)VALUES(?,?,?,?,?,?)";
+    PreparedStatement ps = cons.prepareStatement(sql);
+    ps.setString(1,jtf1.getText());
+    ps.setString(2,jtf2.getText());
+    ps.setString(3,jtf3.getText());
+    ps.setString(4,jtf4.getText());
+    ps.setString(5,jtf5.getText());
+    ps.setString(6,jtf6.getText());
+    
+    ps.executeUpdate();
+    ResultSet rs = ps.getGeneratedKeys();
+    
+    int generateKey = 0;
+    if(rs.next()){
+    generateKey = rs.getInt(1);
+    }
+    ps.close();
+    rs.close();
+    cons.close();
+    JOptionPane.showConfirmDialog(this,"Successful adding new student");
+    
+    }catch (SQLException ex){
+        ex.printStackTrace();
+    }
+   }
+    
  
 
     /**
@@ -303,7 +332,15 @@ public class Students extends javax.swing.JFrame {
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         // TODO add your handling code here:
+       Students s = new Students();
+       s.setStuID(jtf1.getText());
+       s.setName(jtf2.getText());
+       s.setGender(jtf3.getText());
+       s.setBirthday(jtf4.getText());
+       s.setPhone(jtf5.getText());
+       s.setRoom(jtf6.getText());  
        
+       insert(s);
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void jtf6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtf6ActionPerformed
@@ -364,7 +401,7 @@ public class Students extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Students().setVisible(true);
+                new StudentsView().setVisible(true);
             }
         });
     }

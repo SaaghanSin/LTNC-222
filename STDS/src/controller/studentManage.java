@@ -24,6 +24,8 @@ import java.awt.Dimension;
 import java.awt.BorderLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import view.StudentsPanel;
+import javax.swing.JFrame;
 
 /**
  *
@@ -103,10 +105,17 @@ public class studentManage {
           student.setPhone(model.getValueAt(selectedRowIndex,4).toString());
           student.setRoom(model.getValueAt(selectedRowIndex,4).toString());
           
-          
+          StudentsPanel frame = new StudentsPanel(student);
+          frame.setVisible(true);
+          System.out.println("Hello");
          }
      }   
     });
+    
+    
+    	
+	
+    
     
     JScrollPane scrollPane = new JScrollPane();
     scrollPane.getViewport().add(table);

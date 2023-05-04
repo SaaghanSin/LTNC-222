@@ -10,6 +10,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.sql.PreparedStatement;
+
 /**
  *
  * @author User
@@ -27,6 +29,7 @@ public class DBConnect {
             }
        return null;
     }
+    
 public static void main(String[] args) {
     try {
         Connection c = getConnection();
