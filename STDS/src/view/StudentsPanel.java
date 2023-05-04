@@ -49,7 +49,8 @@ public class StudentsPanel extends javax.swing.JPanel {
     public void insert(){
         try{
         Connection cons = DBConnect.getConnection();
-        String sql = "Insert into Students(Student ID, Name, Gender, Birthday, Phone , Room)Values(?,?,?,?,?,?)";
+       String sql = "INSERT INTO Students (StudentID, Name, Gender, Birthday, Phone, Room) VALUES (?, ?, ?, ?, ?, ?)";
+
         PreparedStatement ps = cons.prepareStatement(sql,PreparedStatement.RETURN_GENERATED_KEYS);
         
         ps.setString(1,jtf1.getText());
@@ -178,16 +179,16 @@ public class StudentsPanel extends javax.swing.JPanel {
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(20, 20, 20))
             .addGroup(layout.createSequentialGroup()
-                .addGap(364, 364, 364)
+                .addGap(354, 354, 354)
                 .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(103, 103, 103)
+                .addGap(27, 27, 27)
                 .addComponent(btnAdd)
-                .addGap(18, 18, 18)
+                .addGap(94, 94, 94)
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );

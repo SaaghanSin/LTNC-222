@@ -11,7 +11,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import model.Students;
 /**
@@ -28,35 +27,39 @@ public class StudentsView extends javax.swing.JFrame {
         studentManage controller = new studentManage(jpnView,btnAdd, jtfSearch);
        controller.setDataToModel();
     }
-   void insert(model.Students s){
-       try{
-    Connection cons = DBConnect.getConnection();
-    String sql = "Insert into Students(Student ID, Name, Gender, Brithday, Phone, Room)VALUES(?,?,?,?,?,?)";
-    PreparedStatement ps = cons.prepareStatement(sql);
-    ps.setString(1,jtf1.getText());
-    ps.setString(2,jtf2.getText());
-    ps.setString(3,jtf3.getText());
-    ps.setString(4,jtf4.getText());
-    ps.setString(5,jtf5.getText());
-    ps.setString(6,jtf6.getText());
+    void insert(model.Students s){
+   try {
+      Connection cons = DBConnect.getConnection();
+      String sql = "Insert into Students(StudentID, Name, Gender, Birthday, Phone, Room)VALUES(?,?,?,?,?,?)";
+      PreparedStatement ps = cons.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+      ps.setString(1,jtf1.getText());
+      ps.setString(2,jtf2.getText());
+      ps.setString(3,jtf3.getText());
+      ps.setString(4,jtf4.getText());
+      ps.setString(5,jtf5.getText());
+      ps.setString(6,jtf6.getText());
     
-    ps.executeUpdate();
-    ResultSet rs = ps.getGeneratedKeys();
+      int affectedRows = ps.executeUpdate();
+      if (affectedRows == 0) {
+         throw new SQLException("Creating student failed, no rows affected.");
+      }
+      
+      ResultSet rs = ps.getGeneratedKeys();
+      int generatedKey = 0;
+      if (rs.next()) {
+         generatedKey = rs.getInt(1);
+      }
+      ps.close();
+      rs.close();
+      cons.close();
+      JOptionPane.showConfirmDialog(this,"Successful adding new student");
     
-    int generateKey = 0;
-    if(rs.next()){
-    generateKey = rs.getInt(1);
-    }
-    ps.close();
-    rs.close();
-    cons.close();
-    JOptionPane.showConfirmDialog(this,"Successful adding new student");
-    
-    }catch (SQLException ex){
-        ex.printStackTrace();
-    }
+   } catch (SQLException ex) {
+      ex.printStackTrace();
    }
-    
+}
+
+   
  
 
     /**
@@ -225,7 +228,7 @@ public class StudentsView extends javax.swing.JFrame {
             }
         });
 
-        jtfSearch.setText("jTextField1");
+        jtfSearch.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
         jtfSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jtfSearchActionPerformed(evt);
@@ -339,7 +342,7 @@ public class StudentsView extends javax.swing.JFrame {
        s.setBirthday(jtf4.getText());
        s.setPhone(jtf5.getText());
        s.setRoom(jtf6.getText());  
-       
+
        insert(s);
     }//GEN-LAST:event_btnAddActionPerformed
 

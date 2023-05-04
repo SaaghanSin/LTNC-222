@@ -103,11 +103,12 @@ public class studentManage {
           student.setGender(model.getValueAt(selectedRowIndex,2).toString());
           student.setBirthday(model.getValueAt(selectedRowIndex,3).toString());
           student.setPhone(model.getValueAt(selectedRowIndex,4).toString());
-          student.setRoom(model.getValueAt(selectedRowIndex,4).toString());
+          student.setRoom(model.getValueAt(selectedRowIndex,5).toString());
           
           StudentsPanel frame = new StudentsPanel(student);
           frame.setVisible(true);
-          System.out.println("Hello");
+          
+
          }
      }   
     });

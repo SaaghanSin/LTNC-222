@@ -37,7 +37,7 @@ public class studentController {
      jtf4.setText(student.getBirthday());
      jtf5.setText(student.getPhone());
      jtf6.setText(student.getRoom());
+     System.out.println("Success");
     }
-    
 }
 

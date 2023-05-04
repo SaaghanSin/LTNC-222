@@ -28,7 +28,7 @@ public class studentDaoImp implements studentDao {
 
             while (rs.next()) {
                 Students student = new Students();
-                student.setStuID(rs.getString("Student ID"));
+                student.setStuID(rs.getString("StudentID"));
                 student.setName(rs.getString("Name"));
                 student.setGender(rs.getString("Gender"));
                 student.setBirthday(rs.getString("Birthday"));
