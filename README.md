@@ -36,7 +36,7 @@ Hệ thống bao gồm 3 tính năng chính khi quản lí sinh viên:
 
 ## III. Class Diagram
 ---
-![alt text]https://github.com/SaaghanSin/LTNC-222/blob/main/Untitled%20Workspace.png?raw=true)
+![alt text](https://github.com/SaaghanSin/LTNC-222/blob/main/Untitled%20Workspace.png?raw=true)
 
 ## IV.Cấu trúc thư mục
 ---
