@@ -46,30 +46,7 @@ public class StudentsPanel extends javax.swing.JPanel {
         controller.setView(student);
        
     }
-    public void insert(){
-        try{
-        Connection cons = DBConnect.getConnection();
-       String sql = "INSERT INTO Students (StudentID, Name, Gender, Birthday, Phone, Room) VALUES (?, ?, ?, ?, ?, ?)";
-
-        PreparedStatement ps = cons.prepareStatement(sql,PreparedStatement.RETURN_GENERATED_KEYS);
-        
-        ps.setString(1,jtf1.getText());
-        ps.setString(2,jtf2.getText());
-        ps.setString(3,jtf3.getText());
-        ps.setString(4,jtf4.getText());
-        ps.setString(5,jtf5.getText());
-        ps.setString(62,jtf6.getText());
-        
-        ps.executeUpdate();
-        ResultSet rs = ps.getGeneratedKeys();
-        
-        int generatedKey = 0;
-        if(rs.next()){
-         
-        }} catch (SQLException ex){
-                ex.printStackTrace();
-                }
-        }
+    
     
 
     /**

@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package controller;
+import dao.DBConnect;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JButton;
@@ -24,6 +25,10 @@ import java.awt.Dimension;
 import java.awt.BorderLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import view.StudentsPanel;
 import javax.swing.JFrame;
 
@@ -112,7 +117,7 @@ public class studentManage {
          }
      }   
     });
-    
+     
     
     	
 	

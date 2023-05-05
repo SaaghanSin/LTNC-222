@@ -6,12 +6,14 @@ package view;
 import view.mainpage;
 import dao.DBConnect;
 import controller.studentManage;
+import java.sql.Statement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.util.logging.Level;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import model.Students;
 /**
  *
@@ -27,7 +29,7 @@ public class StudentsView extends javax.swing.JFrame {
         studentManage controller = new studentManage(jpnView,btnAdd, jtfSearch);
        controller.setDataToModel();
     }
-    void insert(model.Students s){
+  /*  void insert(model.Students s){
    try {
       Connection cons = DBConnect.getConnection();
       String sql = "Insert into Students(StudentID, Name, Gender, Birthday, Phone, Room)VALUES(?,?,?,?,?,?)";
@@ -52,13 +54,106 @@ public class StudentsView extends javax.swing.JFrame {
       ps.close();
       rs.close();
       cons.close();
-      JOptionPane.showConfirmDialog(this,"Successful adding new student");
+      JOptionPane.showMessageDialog(this,"New student added successfully.");
+
     
    } catch (SQLException ex) {
       ex.printStackTrace();
    }
-}
+}*/
+   
+public void refreshTable() {
+    studentManage controller = new studentManage(jpnView,btnAdd, jtfSearch);
+       controller.setDataToModel();
+    }
 
+    void insert(model.Students s) {
+    try {
+        Connection cons = DBConnect.getConnection();
+        String sqlCheck = "SELECT COUNT(*) FROM Students WHERE StudentID = ?";
+        PreparedStatement psCheck = cons.prepareStatement(sqlCheck);
+        psCheck.setString(1, jtf1.getText());
+        ResultSet rsCheck = psCheck.executeQuery();
+        rsCheck.next();
+        int count = rsCheck.getInt(1);
+        rsCheck.close();
+        psCheck.close();
+        if (count > 0) {
+            JOptionPane.showMessageDialog(this, "A student with the same StudentID already exists.");
+        } else {
+            String sqlInsert = "INSERT INTO Students(StudentID, Name, Gender, Birthday, Phone, Room) VALUES(?,?,?,?,?,?)";
+            PreparedStatement psInsert = cons.prepareStatement(sqlInsert);
+            psInsert.setString(1, jtf1.getText());
+            psInsert.setString(2, jtf2.getText());
+            psInsert.setString(3, jtf3.getText());
+            psInsert.setString(4, jtf4.getText());
+            psInsert.setString(5, jtf5.getText());
+            psInsert.setString(6, jtf6.getText());
+            psInsert.executeUpdate();
+            psInsert.close();
+            cons.close();
+            JOptionPane.showMessageDialog(this, "Successful adding new student");
+            refreshTable();
+        }
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+    }
+}
+void delete(String id) {
+    try {
+        Connection con = DBConnect.getConnection();
+        String sql = "DELETE FROM Students WHERE StudentID = ?";
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setString(1, id);
+        int rowsDeleted = ps.executeUpdate();
+        if (rowsDeleted > 0) {
+            JOptionPane.showMessageDialog(this, "Student deleted successfully.");
+        } else {
+            JOptionPane.showMessageDialog(this, "No student found with ID: " + id);
+        }
+        ps.close();
+        con.close();
+        refreshTable();
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+    }
+}
+public void find(String column, String value) {
+    try {
+        Connection con = DBConnect.getConnection();
+        String sql = "SELECT * FROM Students WHERE " + column + " = ?";
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setString(1, value);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) {
+            // retrieve the values from the ResultSet
+            String id = rs.getString("StudentID");
+            String name = rs.getString("Name");
+            String gender = rs.getString("Gender");
+            String birthday = rs.getString("Birthday");
+            String phone = rs.getString("Phone");
+            String room = rs.getString("Room");
+            // display the values in a dialog box
+            JOptionPane.showMessageDialog(this, "Student found:\n"
+                + "ID: " + id + "\n"
+                + "Name: " + name + "\n"
+                + "Gender: " + gender + "\n"
+                + "Birthday: " + birthday + "\n"
+                + "Phone: " + phone + "\n"
+                + "Room: " + room);
+        } else {
+            JOptionPane.showMessageDialog(this, "No student found with " + column + " = " + value);
+        }
+        rs.close();
+        ps.close();
+        con.close();
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+    }
+
+ }
+
+ 
    
  
 
@@ -90,7 +185,9 @@ public class StudentsView extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jButton3 = new javax.swing.JButton();
         btnAdd = new javax.swing.JButton();
+        btnDel = new javax.swing.JButton();
         jtfSearch = new javax.swing.JTextField();
+        btnDel1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("STDS");
@@ -228,10 +325,26 @@ public class StudentsView extends javax.swing.JFrame {
             }
         });
 
+        btnDel.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
+        btnDel.setText("DELETE");
+        btnDel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDelActionPerformed(evt);
+            }
+        });
+
         jtfSearch.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
         jtfSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jtfSearchActionPerformed(evt);
+            }
+        });
+
+        btnDel1.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
+        btnDel1.setText("FIND");
+        btnDel1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDel1ActionPerformed(evt);
             }
         });
 
@@ -242,27 +355,24 @@ public class StudentsView extends javax.swing.JFrame {
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jpnView, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(18, 18, 18)
-                            .addComponent(jtf1, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(18, 18, 18)
-                            .addComponent(jtf2, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(81, 81, 81)
-                        .addComponent(jtfSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())
+                        .addGap(21, 21, 21)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jtf1, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jtf2, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(29, 29, 29)
+                        .addGap(74, 74, 74)
+                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(21, 21, 21)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -272,7 +382,7 @@ public class StudentsView extends javax.swing.JFrame {
                                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(jtf4, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 97, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -282,7 +392,15 @@ public class StudentsView extends javax.swing.JFrame {
                                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(jtf6, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(22, 22, 22))))
+                        .addGap(22, 22, 22))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(94, 94, 94)
+                        .addComponent(btnDel, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnDel1, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(65, 65, 65)
+                        .addComponent(jtfSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 5, javax.swing.GroupLayout.PREFERRED_SIZE))))
             .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
@@ -314,8 +432,11 @@ public class StudentsView extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton3)
-                    .addComponent(btnAdd)
-                    .addComponent(jtfSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jtfSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnAdd)
+                        .addComponent(btnDel))
+                    .addComponent(btnDel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -374,6 +495,19 @@ public class StudentsView extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jtfSearchActionPerformed
 
+    private void btnDelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelActionPerformed
+        // TODO add your handling code here:
+        String input = JOptionPane.showInputDialog(null, "Enter the StudentID you want to delete:");
+        delete(input);
+    }//GEN-LAST:event_btnDelActionPerformed
+
+    private void btnDel1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDel1ActionPerformed
+        // TODO add your handling code here:
+        String column = JOptionPane.showInputDialog(this, "Enter column name:");
+        String value = JOptionPane.showInputDialog(this, "Enter value for column " + column + ":");
+        find(column,value);
+    }//GEN-LAST:event_btnDel1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -411,6 +545,8 @@ public class StudentsView extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
+    private javax.swing.JButton btnDel;
+    private javax.swing.JButton btnDel1;
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
