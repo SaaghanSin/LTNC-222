@@ -57,6 +57,7 @@ https://drive.google.com/file/d/1YslivfHiUrQcspoDlx4MWAS8J5MNPLtX/view?usp=shari
 
 Bản báo cáo chính thức được nhóm hoàn thiện với tên file 2110992_VuLamHoangDai.pdf và đặt tại nhánh main của github này
 https://github.com/SaaghanSin/LTNC-222/blob/main/2110992_VuLamHoangDai.pdf
+
 Thực hiện bởi:
 Vũ Lâm Hoàng Đại - 2110992
 
